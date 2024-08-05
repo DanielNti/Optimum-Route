@@ -1,0 +1,29 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Route {
+  createdAt            DateTime              @default(now())
+  distance             Float?
+  distanceCalculations DistanceCalculation[]
+  endLocation          String?
+  estimatedTime        Float?
+  id                   String                @id @default(cuid())
+  startLocation        String?
+  updatedAt            DateTime              @updatedAt
+}
+
+model DistanceCalculation {
+  algorithmUsed String?
+  createdAt     DateTime @default(now())
+  id            String   @id @default(cuid())
+  result        Json?
+  route         Route?   @relation(fields: [routeId], references: [id])
+  routeId       String?
+  updatedAt     DateTime @updatedAt
+}
